@@ -50,7 +50,7 @@
               <div class="w-12 h-12 rounded-xl bg-white/15 grid place-items-center shadow-inner"
                    style="animation: floatMoney 3s ease-in-out infinite;">
                 <svg viewBox="0 0 24 24" class="w-6 h-6 text-emerald-200" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.75A.75.75 0 013 4.5h.75m0 0h.75A.75.75 0 015.25 6v.75m0 0v-.75A.75.75 0 015.25 4.5h-.75m0 0a.75.75 0 01.75.75v.75m0 0v.75A.75.75 0 015.25 8.25h-.75m0 0a.75.75 0 01-.75-.75v-.75m0 0A.75.75 0 013 6.75h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0p-.75A.75.75 0 015.25 9h-.75m0 0a.75.75 0 01-.75-.75V7.5m0 0A.75.75 0 013 6.75h.75M4.5 12v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75V12m0 0v-.75a.75.75 0 01.75-.75h.75a.75.75 0 01.75.75V12m0 0v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75V12m9-3.75a.75.75 0 01.75.75v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75v-.75a.75.75 0 01.75-.75h.75z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.75A.75.75 0 013 4.5h.75m0 0h.75A.75.75 0 015.25 6v.75m0 0v-.75A.75.75 0 015.25 4.5h-.75m0 0a.75.75 0 01.75.75v.75m0 0v.75A.75.75 0 015.25 8.25h-.75m0 0a.75.75 0 01-.75-.75v-.75m0 0A.75.75 0 013 6.75h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0v-.75A.75.75 0 015.25 9h-.75m0 0a.75.75 0 01-.75-.75V7.5m0 0A.75.75 0 013 6.75h.75M4.5 12v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75V12m0 0v-.75a.75.75 0 01.75-.75h.75a.75.75 0 01.75.75V12m0 0v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75V12m9-3.75a.75.75 0 01.75.75v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75v-.75a.75.75 0 01.75-.75h.75z" />
                 </svg>
               </div>
               <div class="flex-1">
@@ -341,9 +341,9 @@
     }
 
     // ---------- Validation ----------
-    const validateName = () => { const ok = nameEl.value.trim(); errName.classList.toggle('hidden', !ok); return ok; }
-    const validatePhone = () => { const ok = phoneEl.value.replace(/\D/g, '').length >= 9; errPhone.classList.toggle('hidden', !ok); return ok; }
-    const validateSlip = () => { const ok = !!slipDataURL; errSlip.classList.toggle('hidden', !ok); return ok; }
+    const validateName = () => { const ok = !!(nameEl && nameEl.value.trim()); errName.classList.toggle('hidden', ok); return ok; }
+    const validatePhone = () => { const ok = !!(phoneEl && phoneEl.value.replace(/\D/g, '').length >= 9); errPhone.classList.toggle('hidden', ok); return ok; }
+    const validateSlip = () => { const ok = !!slipDataURL; errSlip.classList.toggle('hidden', ok); return ok; }
     const validateSlipFile = (file) => {
       errSlip.classList.add('hidden');
       if (!file.type.startsWith('image/')) {
@@ -404,56 +404,60 @@
     }
 
     // ---------- Handlers ----------
-    copyPPBtn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(PROMPTPAY_ID);
-        const originalText = copyPPBtn.textContent;
-        copyPPBtn.textContent = 'คัดลอกแล้ว!';
-        copyPPBtn.disabled = true;
-        copyPPBtn.classList.replace('bg-emerald-600', 'bg-green-500');
-        setTimeout(() => {
-          copyPPBtn.textContent = originalText;
-          copyPPBtn.disabled = false;
-          copyPPBtn.classList.replace('bg-green-500', 'bg-emerald-600');
-        }, 2000);
-      } catch (err) {
-        openModal({ title: 'คัดลอกไม่สำเร็จ', message: 'อุปกรณ์ของคุณไม่อนุญาต โปรดคัดลอกเอง', tone: 'danger' });
-      }
-    });
+    if (copyPPBtn) {
+        copyPPBtn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(PROMPTPAY_ID);
+            const originalText = copyPPBtn.textContent;
+            copyPPBtn.textContent = 'คัดลอกแล้ว!';
+            copyPPBtn.disabled = true;
+            copyPPBtn.classList.replace('bg-emerald-600', 'bg-green-500');
+            setTimeout(() => {
+              copyPPBtn.textContent = originalText;
+              copyPPBtn.disabled = false;
+              copyPPBtn.classList.replace('bg-green-500', 'bg-emerald-600');
+            }, 2000);
+          } catch (err) {
+            openModal({ title: 'คัดลอกไม่สำเร็จ', message: 'อุปกรณ์ของคุณไม่อนุญาต โปรดคัดลอกเอง', tone: 'danger' });
+          }
+        });
+    }
     
-    nameEl.addEventListener('blur', validateName);
-    phoneEl.addEventListener('blur', validatePhone);
+    if(nameEl) nameEl.addEventListener('blur', validateName);
+    if(phoneEl) phoneEl.addEventListener('blur', validatePhone);
 
-    donateForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!validateForm()) return;
-      showLoading(true);
-      await new Promise(r => setTimeout(r, 1200 + Math.random() * 500));
-      
-      const item = {
-        id: id(),
-        name: nameEl.value.trim(),
-        phone: phoneEl.value.trim(),
-        slip: slipDataURL,
-        createdAt: new Date().toISOString()
-      };
-      donations.unshift(item);
-      writeLS();
-      showLoading(false);
+    if (donateForm) {
+        donateForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (!validateForm()) return;
+          showLoading(true);
+          await new Promise(r => setTimeout(r, 1200 + Math.random() * 500));
+          
+          const item = {
+            id: id(),
+            name: nameEl.value.trim(),
+            phone: phoneEl.value.trim(),
+            slip: slipDataURL,
+            createdAt: new Date().toISOString()
+          };
+          donations.unshift(item);
+          writeLS();
+          showLoading(false);
 
-      donateForm.reset();
-      clearSlipBtn.click();
-      [errName, errPhone, errSlip].forEach(el => el.classList.add('hidden'));
+          donateForm.reset();
+          clearSlipBtn.click();
+          [errName, errPhone, errSlip].forEach(el => el.classList.add('hidden'));
 
-      await openModal({
-        title: 'สำเร็จ!',
-        message: 'ขอบคุณที่เลี้ยงกาแฟ รายการถูกบันทึกในแดชบอร์ดแล้ว',
-        tone: 'success',
-        primaryText: 'ดูแดชบอร์ด'
-      });
-      listWrap.dataset.isNew = true;
-      setActiveTab('dashboard');
-    });
+          await openModal({
+            title: 'สำเร็จ!',
+            message: 'ขอบคุณที่เลี้ยงกาแฟ รายการถูกบันทึกในแดชบอร์ดแล้ว',
+            tone: 'success',
+            primaryText: 'ดูแดชบอร์ด'
+          });
+          listWrap.dataset.isNew = true;
+          setActiveTab('dashboard');
+        });
+    }
 
     listWrap.addEventListener('click', async (e) => {
       const btn = e.target.closest('button[data-action]');
@@ -493,10 +497,12 @@
     // ---------- Init ----------
     function init() {
       donations = readLS();
-      ppDisplay.textContent = PROMPTPAY_ID;
+      if(ppDisplay) ppDisplay.textContent = PROMPTPAY_ID;
       setActiveTab('form');
     }
-    init();
+    
+    // Run init after the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
