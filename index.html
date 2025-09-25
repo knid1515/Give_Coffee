@@ -17,7 +17,6 @@
     @keyframes spin {
       to { transform: rotate(360deg) }
     }
-    /* NEW: Animation for panels and list items */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
@@ -91,7 +90,7 @@
                   <p class="text-xs text-slate-500">PromptPay</p>
                   <p id="ppDisplay" class="text-sm font-semibold text-slate-800 truncate">0812345678</p>
                 </div>
-                <button id="copyPPBtn" type="button" class="px-3 py-2 rounded-xl bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition-colors duration-200 w-[72px] text-center">คัดลอก</button>
+                <button id="copyPPBtn" type="button" class="px-3 py-2 rounded-xl bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition-colors duration-200 w-[80px] text-center">คัดลอก</button>
               </div>
 
               <form id="donateForm" class="space-y-4">
@@ -189,7 +188,7 @@
 
           <div id="modal" class="hidden absolute inset-0 bg-black/40 glass z-40 transition-opacity duration-300">
             <div class="w-full h-full flex items-end sm:items-center justify-center p-4">
-              <div class="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-5 fade-in-25 duration-300">
+              <div id="modalContent" class="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden">
                 <div id="modalHeader" class="px-5 py-4 border-b">
                   <p id="modalTitle" class="font-semibold"></p>
                 </div>
@@ -241,6 +240,7 @@
     const errSlip = $$('#errSlip');
     // Modal Elements
     const modal = $$('#modal');
+    const modalContent = $$('#modalContent');
     const modalHeader = $$('#modalHeader');
     const modalTitle = $$('#modalTitle');
     const modalMessage = $$('#modalMessage');
@@ -259,7 +259,6 @@
     }
     const showLoading = (v) => loading.classList.toggle('hidden', !v);
 
-    // NEW: Improved tab switching with animation
     const setActiveTab = (tabId) => {
       const activeClasses = 'bg-white text-amber-700 shadow';
       const inactiveClasses = 'text-white/90 hover:text-white bg-transparent shadow-none';
@@ -296,6 +295,7 @@
       if (secondaryText) modalSecondary.textContent = secondaryText;
       
       modal.classList.remove('hidden');
+      modalContent.style.animation = 'fadeIn 0.2s ease-out';
       return new Promise((resolve) => { modalResolve = resolve; });
     };
     const closeModal = (result=null) => {
@@ -341,9 +341,9 @@
     }
 
     // ---------- Validation ----------
-    const validateName = () => { const ok = nameEl.value.trim(); errName.classList.toggle('hidden', ok); return ok; }
-    const validatePhone = () => { const ok = phoneEl.value.replace(/\D/g, '').length >= 9; errPhone.classList.toggle('hidden', ok); return ok; }
-    const validateSlip = () => { const ok = !!slipDataURL; errSlip.classList.toggle('hidden', ok); return ok; }
+    const validateName = () => { const ok = nameEl.value.trim(); errName.classList.toggle('hidden', !ok); return ok; }
+    const validatePhone = () => { const ok = phoneEl.value.replace(/\D/g, '').length >= 9; errPhone.classList.toggle('hidden', !ok); return ok; }
+    const validateSlip = () => { const ok = !!slipDataURL; errSlip.classList.toggle('hidden', !ok); return ok; }
     const validateSlipFile = (file) => {
       errSlip.classList.add('hidden');
       if (!file.type.startsWith('image/')) {
@@ -368,9 +368,7 @@
       emptyState.classList.toggle('hidden', has);
       listWrap.innerHTML = '';
       donations.forEach((d, index) => {
-        // NEW: Separate function for rendering list item
         const li = createListItem(d);
-        // NEW: Add animation class only to the newest item on first render
         if (index === 0 && listWrap.dataset.isNew) {
             li.classList.add('list-item-new');
             delete listWrap.dataset.isNew;
@@ -379,7 +377,6 @@
       });
     }
 
-    // NEW: Function to create a single list item
     function createListItem(d) {
         const li = document.createElement('li');
         li.className = "px-4 py-3 bg-white";
@@ -407,15 +404,16 @@
     }
 
     // ---------- Handlers ----------
-    // IMPROVED: Copy PromptPay feedback
     copyPPBtn.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(PROMPTPAY_ID);
         const originalText = copyPPBtn.textContent;
         copyPPBtn.textContent = 'คัดลอกแล้ว!';
+        copyPPBtn.disabled = true;
         copyPPBtn.classList.replace('bg-emerald-600', 'bg-green-500');
         setTimeout(() => {
           copyPPBtn.textContent = originalText;
+          copyPPBtn.disabled = false;
           copyPPBtn.classList.replace('bg-green-500', 'bg-emerald-600');
         }, 2000);
       } catch (err) {
@@ -423,7 +421,6 @@
       }
     });
     
-    // NEW: Real-time validation listeners
     nameEl.addEventListener('blur', validateName);
     phoneEl.addEventListener('blur', validatePhone);
 
@@ -454,7 +451,6 @@
         tone: 'success',
         primaryText: 'ดูแดชบอร์ด'
       });
-      // NEW: Flag for new item animation
       listWrap.dataset.isNew = true;
       setActiveTab('dashboard');
     });
@@ -468,8 +464,7 @@
       if (idx === -1) return;
 
       if (action === 'view') {
-        const slip = donations[idx].slip;
-        openModal({ title: 'ดูสลิป', message: 'ตัวอย่างสลิปธนาคาร', tone: 'info', image: slip });
+        openModal({ title: 'ดูสลิป', message: 'ตัวอย่างสลิปธนาคาร', tone: 'info', image: donations[idx].slip });
       } else if (action === 'delete') {
         const confirm = await openModal({ title: 'ยืนยันการลบ', message: 'คุณต้องการลบรายการนี้หรือไม่?', tone: 'danger', primaryText: 'ลบ', secondaryText: 'ยกเลิก' });
         if (confirm) {
@@ -481,7 +476,6 @@
       }
     });
 
-    // Seed samples button
     $$('#seedSamples')?.addEventListener('click', async () => {
       const samples = [{ name: 'นัท', phone: '0891112222' }, { name: 'ฝน', phone: '0815556666' }, { name: 'เจ',  phone: '0827778888' }];
       const tinyImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAukB9y5e2/8AAAAASUVORK5CYII=';
@@ -493,7 +487,6 @@
       openModal({ title: 'เพิ่มตัวอย่างแล้ว', message: 'เราใส่รายการตัวอย่างลงในแดชบอร์ดให้ทดสอบแล้ว', tone: 'success' });
     });
 
-    // Tab buttons
     TABS.form.btn.addEventListener('click', () => setActiveTab('form'));
     TABS.dashboard.btn.addEventListener('click', () => setActiveTab('dashboard'));
 
