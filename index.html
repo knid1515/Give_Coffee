@@ -7,30 +7,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      box-sizing: border-box;
-    }
-    @keyframes floatMoney {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg) }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .spin { animation: spin 1s linear infinite; }
-    .panel-content { animation: fadeIn 0.3s ease-out; }
-    .list-item-new { animation: fadeIn 0.4s ease-out; }
-    .metal-ring {
-      background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.02));
-    }
-    .glass {
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
+    body { box-sizing: border-box; }
+    @keyframes floatMoney { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+    @keyframes spin { to { transform: rotate(360deg) } }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+    .spin{animation:spin 1s linear infinite}
+    .panel-content{animation:fadeIn .3s ease-out}
+    .list-item-new{animation:fadeIn .4s ease-out}
+    .metal-ring{background:linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.02))}
+    .glass{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-amber-900 via-orange-800 to-rose-800 font-[Prompt] antialiased text-slate-800">
@@ -38,16 +23,14 @@
     <div class="relative w-full max-w-[420px]">
       <div class="relative">
         <div class="metal-ring absolute inset-0 rounded-[2.2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)]"></div>
-        <div id="phone"
-             class="relative rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-b from-amber-50 to-orange-50 shadow-2xl">
+        <div id="phone" class="relative rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-b from-amber-50 to-orange-50 shadow-2xl">
           <div class="absolute top-2 left-1/2 -translate-x-1/2 z-20">
             <div class="w-40 h-6 bg-black/90 rounded-3xl"></div>
           </div>
 
           <div class="relative pt-10 pb-4 px-5 bg-gradient-to-br from-amber-600 via-amber-500 to-orange-500 text-white">
             <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-xl bg-white/15 grid place-items-center shadow-inner"
-                   style="animation: floatMoney 3s ease-in-out infinite;">
+              <div class="w-12 h-12 rounded-xl bg-white/15 grid place-items-center shadow-inner" style="animation: floatMoney 3s ease-in-out infinite;">
                 <svg viewBox="0 0 24 24" class="w-6 h-6 text-emerald-200" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.75A.75.75 0 013 4.5h.75m0 0h.75A.75.75 0 015.25 6v.75m0 0v-.75A.75.75 0 015.25 4.5h-.75m0 0a.75.75 0 01.75.75v.75m0 0v.75A.75.75 0 015.25 8.25h-.75m0 0a.75.75 0 01-.75-.75v-.75m0 0A.75.75 0 013 6.75h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0v-.75A.75.75 0 015.25 9h-.75m0 0a.75.75 0 01-.75-.75V7.5m0 0A.75.75 0 013 6.75h.75M4.5 12v.75a.75.75 0 01.75.75h.75a.75.75 0 01.75-.75V12m0 0v-.75a.75.75 0 01.75-.75h-.75a.75.75 0 01-.75.75V12m9-3.75a.75.75 0 01.75.75v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75v-.75a.75.75 0 01.75-.75h.75z" />
                 </svg>
@@ -83,13 +66,15 @@
                 </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-white border border-slate-200 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 grid place-items-center font-semibold text-lg">฿</div>
-                <div class="flex-1 min-w-0">
-                  <p class="text-xs text-slate-500">PromptPay</p>
-                  <p id="ppDisplay" class="text-sm font-semibold text-slate-800 truncate">0812345678</p>
+              <!-- PromptPay: เปลี่ยนเป็น input ให้คัดลอกเอง (ตัด Clipboard API เพื่อลด error 403) -->
+              <div class="p-4 rounded-2xl bg-white border border-slate-200">
+                <p class="text-xs text-slate-500 mb-1">PromptPay</p>
+                <div class="flex items-center gap-2">
+                  <input id="ppDisplay" class="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                         readonly value="0812345678"
+                         onclick="this.select();document.execCommand && document.execCommand('copy');" />
+                  <span class="text-[11px] text-slate-500">แตะเพื่อเลือก/คัดลอก</span>
                 </div>
-                <button id="copyPPBtn" type="button" class="px-3 py-2 rounded-xl bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition-colors duration-200 w-[80px] text-center">คัดลอก</button>
               </div>
 
               <form id="donateForm" class="space-y-4" novalidate>
@@ -164,8 +149,7 @@
                 <div class="px-4 py-3 bg-slate-50 border-b border-slate-200">
                   <p class="text-sm font-semibold text-slate-700">รายการล่าสุด</p>
                 </div>
-                <ul id="listWrap" class="divide-y divide-slate-100 max-h-[360px] overflow-y-auto">
-                </ul>
+                <ul id="listWrap" class="divide-y divide-slate-100 max-h-[360px] overflow-y-auto"></ul>
                 <div id="emptyState" class="p-8 text-center text-slate-500 text-sm hidden">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 mx-auto text-slate-400 mb-2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5l.415-.207a.75.75 0 011.085.67V10.5m0 0h6m-6 0a.75.75 0 001.085.67l.415-.207A.75.75 0 0010.5 10.5v-3m5.25 4.5h-6m6 0a.75.75 0 01-1.085.67l-.415-.207a.75.75 0 01-.67-1.085V10.5m0 0a.75.75 0 01.75-.75h3.375a.75.75 0 01.75.75v3.375a.75.75 0 01-.75.75h-3.375a.75.75 0 01-.75-.75v-3.375z" /></svg>
                   <p class="font-medium">ยังไม่มีรายการ</p>
@@ -208,356 +192,307 @@
   </div>
 
   <script>
-    // Wait for the DOM to be fully loaded before running the script
-    document.addEventListener('DOMContentLoaded', () => {
-    
-      // ---------- State & Config ----------
-      const LS_KEY = 'coffeeDonations';
-      const PROMPTPAY_ID = '0812345678';
-      let donations = [];
-      let slipDataURL = '';
-      const $$ = (s, p=document) => p.querySelector(s);
-      
-      // ---------- Elements ----------
-      const tabForm = $$('#tabForm');
-      const tabDashboard = $$('#tabDashboard');
-      const panelForm = $$('#panelForm');
-      const panelDashboard = $$('#panelDashboard');
-      const donateForm = $$('#donateForm');
-      const nameEl = $$('#name');
-      const phoneEl = $$('#phone');
-      const ppDisplay = $$('#ppDisplay');
-      const copyPPBtn = $$('#copyPPBtn');
-      const dropzone = $$('#dropzone');
-      const slipInput = $$('#slip');
-      const previewWrap = $$('#previewWrap');
-      const slipPreview = $$('#slipPreview');
-      const clearSlipBtn = $$('#clearSlip');
-      const loading = $$('#loading');
-      const sumCount = $$('#sumCount');
-      const sumLast = $$('#sumLast');
-      const listWrap = $$('#listWrap');
-      const emptyState = $$('#emptyState');
-      const errName = $$('#errName');
-      const errPhone = $$('#errPhone');
-      const errSlip = $$('#errSlip');
-      // Modal Elements
-      const modal = $$('#modal');
-      const modalContent = $$('#modalContent');
-      const modalHeader = $$('#modalHeader');
-      const modalTitle = $$('#modalTitle');
-      const modalMessage = $$('#modalMessage');
-      const modalImage = $$('#modalImage');
-      const modalPrimary = $$('#modalPrimary');
-      const modalSecondary = $$('#modalSecondary');
+  document.addEventListener('DOMContentLoaded', () => {
+    // ---------- State & Config ----------
+    const LS_KEY = 'coffeeDonations';
+    const PROMPTPAY_ID = '0812345678';
+    let donations = [];
+    let slipDataURL = '';
+    const $$ = (s, p=document) => p.querySelector(s);
 
-      // ---------- Utils ----------
-      const thTime = (d) => {
-        try {
-          return new Intl.DateTimeFormat('th-TH', { dateStyle: 'medium', timeStyle: 'short' }).format(d);
-        } catch {
-          // fallback สำหรับเบราว์เซอร์ที่ไม่รองรับ dateStyle/timeStyle
-          return (d instanceof Date ? d : new Date(d)).toLocaleString('th-TH');
-        }
-      };
-      const id = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-      const maskPhone = (v) => {
-        const d = (v || '').replace(/\D/g, '');
-        if (d.length <= 3) return d;
-        if (d.length <= 7) return `${d.slice(0,3)}-xxx`;
-        return `${d.slice(0,3)}-xxx-${d.slice(-4)}`;
+    // ---------- Elements ----------
+    const tabForm = $$('#tabForm');
+    const tabDashboard = $$('#tabDashboard');
+    const panelForm = $$('#panelForm');
+    const panelDashboard = $$('#panelDashboard');
+    const donateForm = $$('#donateForm');
+    const nameEl = $$('#name');
+    const phoneEl = $$('#phone');
+    const ppDisplay = $$('#ppDisplay');
+    const dropzone = $$('#dropzone');
+    const slipInput = $$('#slip');
+    const previewWrap = $$('#previewWrap');
+    const slipPreview = $$('#slipPreview');
+    const clearSlipBtn = $$('#clearSlip');
+    const loading = $$('#loading');
+    const sumCount = $$('#sumCount');
+    const sumLast = $$('#sumLast');
+    const listWrap = $$('#listWrap');
+    const emptyState = $$('#emptyState');
+    const errName = $$('#errName');
+    const errPhone = $$('#errPhone');
+    const errSlip = $$('#errSlip');
+    // Modal Elements
+    const modal = $$('#modal');
+    const modalContent = $$('#modalContent');
+    const modalHeader = $$('#modalHeader');
+    const modalTitle = $$('#modalTitle');
+    const modalMessage = $$('#modalMessage');
+    const modalImage = $$('#modalImage');
+    const modalPrimary = $$('#modalPrimary');
+    const modalSecondary = $$('#modalSecondary');
+
+    // ---------- Utils ----------
+    const thTime = (d) => {
+      try {
+        return new Intl.DateTimeFormat('th-TH', { dateStyle: 'medium', timeStyle: 'short' }).format(d);
+      } catch {
+        return (d instanceof Date ? d : new Date(d)).toLocaleString('th-TH');
       }
-      const showLoading = (v) => loading.classList.toggle('hidden', !v);
+    };
+    const id = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+    const maskPhone = (v) => {
+      const d = String(v || '').replace(/\D/g, '');
+      if (d.length <= 3) return d;
+      if (d.length <= 7) return `${d.slice(0,3)}-xxx`;
+      return `${d.slice(0,3)}-xxx-${d.slice(-4)}`;
+    };
+    const showLoading = (v) => loading.classList.toggle('hidden', !v);
 
-      const setActiveTab = (tabId) => {
-        const activeClasses = 'bg-white text-amber-700 shadow';
-        const inactiveClasses = 'text-white/90 hover:text-white bg-transparent shadow-none';
-        
-        const tabs = {
-          form: { btn: tabForm, panel: panelForm },
-          dashboard: { btn: tabDashboard, panel: panelDashboard }
-        };
-
-        for (const key in tabs) {
-            const isActive = key === tabId;
-            tabs[key].panel.classList.toggle('hidden', !isActive);
-            if(isActive) tabs[key].panel.classList.add('panel-content');
-            tabs[key].btn.className = `tab-btn w-full text-center text-sm font-medium px-3 py-2 rounded-lg transition-all ${isActive ? activeClasses : inactiveClasses}`;
-        }
-        
-        if (tabId === 'dashboard') renderDashboard();
+    const setActiveTab = (tabId) => {
+      const active = 'bg-white text-amber-700 shadow';
+      const inactive = 'text-white/90 hover:text-white bg-transparent shadow-none';
+      const tabs = { form:{btn:tabForm, panel:panelForm}, dashboard:{btn:tabDashboard, panel:panelDashboard} };
+      for (const key in tabs) {
+        const on = key === tabId;
+        tabs[key].panel.classList.toggle('hidden', !on);
+        if (on) tabs[key].panel.classList.add('panel-content');
+        tabs[key].btn.className = `tab-btn w-full text-center text-sm font-medium px-3 py-2 rounded-lg transition-all ${on?active:inactive}`;
       }
+      if (tabId === 'dashboard') renderDashboard();
+    };
 
-      const readLS = () => { try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; } }
-      const writeLS = () => {
-        try {
-          localStorage.setItem(LS_KEY, JSON.stringify(donations));
-        } catch (e) {
-          console.error('localStorage setItem failed:', e);
-          openModal({
-            title: 'บันทึกไม่สำเร็จ',
-            message: 'เบราว์เซอร์ของคุณไม่อนุญาตให้จัดเก็บข้อมูลชั่วคราว (เช่น โหมดไม่ระบุตัวตน). รายการจะหายเมื่อปิดหน้า',
-            tone: 'danger'
-          });
-        }
-      };
-
-      // ---------- Modal Logic ----------
-      let modalResolve = null;
-      const openModal = ({ title, message, tone='success', primaryText='ปิด', secondaryText='', image='' } = {}) => {
-        modalTitle.textContent = title || '';
-        modalMessage.textContent = message || '';
-        modalImage.classList.toggle('hidden', !image);
-        modalImage.style.backgroundImage = image ? `url('${image}')` : '';
-        const TONES = {
-          success: { header: "bg-emerald-50 border-emerald-100", title: "text-emerald-800", btn: "bg-emerald-600 hover:bg-emerald-700" },
-          danger: { header: "bg-rose-50 border-rose-100", title: "text-rose-800", btn: "bg-rose-600 hover:bg-rose-700" },
-          info: { header: "bg-sky-50 border-sky-100", title: "text-sky-800", btn: "bg-sky-600 hover:bg-sky-700" },
-        };
-        const c = TONES[tone] || TONES.success;
-        modalHeader.className = `px-5 py-4 border-b ${c.header}`;
-        modalTitle.className = `font-semibold ${c.title}`;
-        modalPrimary.className = `px-4 py-2 rounded-xl text-white text-sm transition ${c.btn}`;
-        modalPrimary.textContent = primaryText || 'ปิด';
-        modalSecondary.classList.toggle('hidden', !secondaryText);
-        if (secondaryText) modalSecondary.textContent = secondaryText;
-        
-        modal.classList.remove('hidden');
-        if (modalContent) modalContent.style.animation = 'fadeIn 0.2s ease-out';
-        return new Promise((resolve) => { modalResolve = resolve; });
-      };
-      const closeModal = (result=null) => {
-        modal.classList.add('hidden');
-        if (modalResolve) { modalResolve(result); modalResolve = null; }
-      };
-      
-      // ---------- Validation ----------
-      const validateName = () => { const ok = !!(nameEl && nameEl.value.trim()); if(errName) errName.classList.toggle('hidden', ok); return ok; }
-      const validatePhone = () => { const ok = !!(phoneEl && phoneEl.value.replace(/\D/g, '').length >= 9); if(errPhone) errPhone.classList.toggle('hidden', ok); return ok; }
-      const validateSlip = () => { const ok = !!slipDataURL; if(errSlip) errSlip.classList.toggle('hidden', ok); return ok; }
-      const validateSlipFile = (file) => {
-        if (!errSlip) return false;
-        errSlip.classList.add('hidden');
-        if (!file.type.startsWith('image/')) {
-          errSlip.textContent = 'ไฟล์ต้องเป็นรูปภาพเท่านั้น';
-          errSlip.classList.remove('hidden');
-          return false;
-        }
-        if (file.size > 3 * 1024 * 1024) {
-          errSlip.textContent = 'ขนาดไฟล์เกิน 3MB';
-          errSlip.classList.remove('hidden');
-          return false;
-        }
-        return true;
-      };
-      const validateForm = () => [validateName(), validatePhone(), validateSlip()].every(Boolean);
-
-      // ---------- Render ----------
-      function renderDashboard() {
-        if (!sumCount || !sumLast || !emptyState || !listWrap) return;
-        const has = donations.length > 0;
-        sumCount.textContent = String(donations.length);
-        sumLast.textContent = has ? thTime(new Date(donations[0].createdAt)) : '—';
-        emptyState.classList.toggle('hidden', has);
-        listWrap.innerHTML = '';
-        donations.forEach((d, index) => {
-          const li = createListItem(d);
-          if (index === 0 && listWrap.dataset.isNew) {
-              li.classList.add('list-item-new');
-              delete listWrap.dataset.isNew;
-          }
-          listWrap.appendChild(li);
+    const readLS = () => { try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; } };
+    const writeLS = () => {
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(donations));
+      } catch (e) {
+        console.error('localStorage setItem failed:', e);
+        openModal({
+          title: 'บันทึกไม่สำเร็จ',
+          message: 'เบราว์เซอร์ของคุณไม่อนุญาตให้จัดเก็บข้อมูลชั่วคราว (เช่น โหมดไม่ระบุตัวตน). รายการจะหายเมื่อปิดหน้า',
+          tone: 'danger'
         });
       }
+    };
 
-      function createListItem(d) {
-          const li = document.createElement('li');
-          li.className = "px-4 py-3 bg-white";
-          li.innerHTML = `
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-800 grid place-items-center font-semibold shrink-0">
-                ${escapeHtml(d.name.trim().charAt(0).toUpperCase())}
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-slate-800 truncate">${escapeHtml(d.name)}</p>
-                <p class="text-xs text-slate-500 truncate">${escapeHtml(maskPhone(d.phone))}</p>
-                <p class="text-[11px] text-slate-400">${thTime(new Date(d.createdAt))}</p>
-              </div>
-              <div class="flex items-center gap-2 shrink-0">
-                <button data-id="${d.id}" data-action="view" class="px-3 py-1.5 rounded-lg bg-sky-50 text-sky-700 hover:bg-sky-100 text-xs font-medium transition">ดูสลิป</button>
-                <button data-id="${d.id}" data-action="delete" class="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 text-xs font-medium transition">ลบ</button>
-              </div>
-            </div>
-          `;
-          return li;
+    // ---------- Modal ----------
+    let modalResolve = null;
+    const openModal = ({ title, message, tone='success', primaryText='ปิด', secondaryText='', image='' } = {}) => {
+      modalTitle.textContent = title || '';
+      modalMessage.textContent = message || '';
+      modalImage.classList.toggle('hidden', !image);
+      modalImage.style.backgroundImage = image ? `url('${image}')` : '';
+      const TONES = {
+        success:{header:"bg-emerald-50 border-emerald-100", title:"text-emerald-800", btn:"bg-emerald-600 hover:bg-emerald-700"},
+        danger:{header:"bg-rose-50 border-rose-100", title:"text-rose-800", btn:"bg-rose-600 hover:bg-rose-700"},
+        info:{header:"bg-sky-50 border-sky-100", title:"text-sky-800", btn:"bg-sky-600 hover:bg-sky-700"},
+      };
+      const c = TONES[tone] || TONES.success;
+      modalHeader.className = `px-5 py-4 border-b ${c.header}`;
+      modalTitle.className = `font-semibold ${c.title}`;
+      modalPrimary.className = `px-4 py-2 rounded-xl text-white text-sm transition ${c.btn}`;
+      modalPrimary.textContent = primaryText || 'ปิด';
+      modalSecondary.classList.toggle('hidden', !secondaryText);
+      if (secondaryText) modalSecondary.textContent = secondaryText;
+      modal.classList.remove('hidden');
+      if (modalContent) modalContent.style.animation = 'fadeIn .2s ease-out';
+      return new Promise((resolve) => { modalResolve = resolve; });
+    };
+    const closeModal = (result=null) => {
+      modal.classList.add('hidden');
+      if (modalResolve) { modalResolve(result); modalResolve = null; }
+    };
+
+    // ---------- Validation (hardened) ----------
+    const validateName = () => {
+      const ok = !!(nameEl && String(nameEl.value || '').trim());
+      errName && errName.classList.toggle('hidden', ok);
+      return ok;
+    };
+    const validatePhone = () => {
+      const raw = phoneEl ? String(phoneEl.value || '') : '';
+      const digits = raw.replace(/\D/g, '');
+      const ok = digits.length >= 9;
+      errPhone && errPhone.classList.toggle('hidden', ok);
+      return ok;
+    };
+    const validateSlip = () => {
+      const ok = !!slipDataURL;
+      errSlip && errSlip.classList.toggle('hidden', ok);
+      return ok;
+    };
+    const validateSlipFile = (file) => {
+      if (!file) return false;
+      if (!file.type || !file.type.startsWith('image/')) {
+        if (errSlip) { errSlip.textContent = 'ไฟล์ต้องเป็นรูปภาพเท่านั้น'; errSlip.classList.remove('hidden'); }
+        return false;
+      }
+      if (file.size > 3*1024*1024) {
+        if (errSlip) { errSlip.textContent = 'ขนาดไฟล์เกิน 3MB'; errSlip.classList.remove('hidden'); }
+        return false;
+      }
+      errSlip && errSlip.classList.add('hidden');
+      return true;
+    };
+    const validateForm = () => [validateName(), validatePhone(), validateSlip()].every(Boolean);
+
+    // ---------- Render ----------
+    function renderDashboard(){
+      if (!sumCount || !sumLast || !emptyState || !listWrap) return;
+      const has = donations.length > 0;
+      sumCount.textContent = String(donations.length);
+      sumLast.textContent = has ? thTime(new Date(donations[0].createdAt)) : '—';
+      emptyState.classList.toggle('hidden', has);
+      listWrap.innerHTML = '';
+      donations.forEach((d, index) => {
+        const li = createListItem(d);
+        if (index === 0 && listWrap.dataset.isNew) {
+          li.classList.add('list-item-new');
+          delete listWrap.dataset.isNew;
+        }
+        listWrap.appendChild(li);
+      });
+    }
+    function createListItem(d){
+      const li = document.createElement('li');
+      li.className = "px-4 py-3 bg-white";
+      li.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-800 grid place-items-center font-semibold shrink-0">
+            ${escapeHtml(String(d.name || '').trim().charAt(0).toUpperCase() || '?')}
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-slate-800 truncate">${escapeHtml(String(d.name || 'ไม่ระบุ'))}</p>
+            <p class="text-xs text-slate-500 truncate">${escapeHtml(maskPhone(d.phone))}</p>
+            <p class="text-[11px] text-slate-400">${thTime(new Date(d.createdAt))}</p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button data-id="${d.id}" data-action="view" class="px-3 py-1.5 rounded-lg bg-sky-50 text-sky-700 hover:bg-sky-100 text-xs font-medium transition">ดูสลิป</button>
+            <button data-id="${d.id}" data-action="delete" class="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 text-xs font-medium transition">ลบ</button>
+          </div>
+        </div>
+      `;
+      return li;
+    }
+    function escapeHtml(s=''){ return s.replace(/[&<>"']/g,(m)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+    // ---------- Dropzone ----------
+    function setupDropzone(){
+      if(!dropzone || !slipInput || !clearSlipBtn) return;
+      dropzone.addEventListener('dragover',(e)=>{e.preventDefault();dropzone.classList.add('bg-amber-100')});
+      dropzone.addEventListener('dragleave',()=>dropzone.classList.remove('bg-amber-100'));
+      dropzone.addEventListener('drop',(e)=>{
+        e.preventDefault();
+        dropzone.classList.remove('bg-amber-100');
+        const file = e.dataTransfer?.files?.[0];
+        if (file) processFile(file);
+      });
+      dropzone.addEventListener('click',()=> slipInput.click());
+      slipInput.addEventListener('change',()=>{ const f = slipInput.files?.[0]; if (f) processFile(f); });
+      clearSlipBtn.addEventListener('click',()=>{
+        slipInput.value=''; slipDataURL='';
+        previewWrap?.classList.add('hidden');
+        if (slipPreview) slipPreview.style.backgroundImage='';
+        validateSlip();
+      });
+      function processFile(file){
+        if(!validateSlipFile(file)) return;
+        const reader = new FileReader();
+        reader.onload = ()=>{
+          slipDataURL = reader.result;
+          previewWrap?.classList.remove('hidden');
+          if (slipPreview) slipPreview.style.backgroundImage = `url('${slipDataURL}')`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // ---------- Events ----------
+    function setupEventHandlers(){
+      modalPrimary && modalPrimary.addEventListener('click',()=>closeModal(true));
+      modalSecondary && modalSecondary.addEventListener('click',()=>closeModal(false));
+      modal && modal.addEventListener('click',(e)=>{ if (e.target===modal) closeModal(null); });
+
+      if (nameEl) nameEl.addEventListener('blur', validateName);
+      if (phoneEl) {
+        phoneEl.addEventListener('input', ()=>{ phoneEl.value = String(phoneEl.value||'').replace(/[^\d]/g,'').slice(0,15); });
+        phoneEl.addEventListener('blur', validatePhone);
       }
 
-      function escapeHtml(s='') {
-        return s.replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-      }
-      
-      // ---------- Dropzone Logic (Patched) ----------
-      function setupDropzone() {
-        if(!dropzone || !slipInput || !clearSlipBtn) return;
-        
-        dropzone.addEventListener('dragover', (e) => { 
-          e.preventDefault(); 
-          dropzone.classList.add('bg-amber-100'); 
-        });
-        dropzone.addEventListener('dragleave', () => dropzone.classList.remove('bg-amber-100'));
-        dropzone.addEventListener('drop', (e) => {
+      if (donateForm) {
+        donateForm.addEventListener('submit', async (e)=>{
           e.preventDefault();
-          dropzone.classList.remove('bg-amber-100');
-          const file = e.dataTransfer?.files?.[0];
-          if (file) processFile(file); // ✅ ประมวลผลไฟล์จาก DataTransfer
-        });
-
-        // ให้คลิกพื้นที่เพื่อเปิด file picker เช่นเดิม
-        dropzone.addEventListener('click', () => slipInput.click());
-
-        slipInput.addEventListener('change', () => {
-          const f = slipInput.files?.[0];
-          if (f) processFile(f);
-        });
-
-        clearSlipBtn.addEventListener('click', () => {
-          slipInput.value = '';
-          slipDataURL = '';
-          if(previewWrap) previewWrap.classList.add('hidden');
-          if(slipPreview) slipPreview.style.backgroundImage = '';
-          validateSlip();
-        });
-
-        function processFile(file){
-          if (!validateSlipFile(file)) return;
-          const reader = new FileReader();
-          reader.onload = () => {
-            slipDataURL = reader.result;
-            if(previewWrap) previewWrap.classList.remove('hidden');
-            if(slipPreview) slipPreview.style.backgroundImage = `url('${slipDataURL}')`;
+          if (!validateForm()) return;
+          showLoading(true);
+          await new Promise(r=>setTimeout(r, 1200 + Math.random()*500));
+          const item = {
+            id: id(),
+            name: String(nameEl?.value || '').trim(),
+            phone: String(phoneEl?.value || '').trim(),
+            slip: slipDataURL,
+            createdAt: new Date().toISOString()
           };
-          reader.readAsDataURL(file);
-        }
-      }
-
-      // ---------- Event Handlers Setup ----------
-      function setupEventHandlers() {
-        if(modalPrimary) modalPrimary.addEventListener('click', () => closeModal(true));
-        if(modalSecondary) modalSecondary.addEventListener('click', () => closeModal(false));
-        if(modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(null); });
-
-        if (copyPPBtn) {
-            copyPPBtn.addEventListener('click', async () => {
-              try {
-                await navigator.clipboard.writeText(PROMPTPAY_ID);
-                const originalText = copyPPBtn.textContent;
-                copyPPBtn.textContent = 'คัดลอกแล้ว!';
-                copyPPBtn.disabled = true;
-                copyPPBtn.classList.replace('bg-emerald-600', 'bg-green-500');
-                setTimeout(() => {
-                  copyPPBtn.textContent = originalText;
-                  copyPPBtn.disabled = false;
-                  copyPPBtn.classList.replace('bg-green-500', 'bg-emerald-600');
-                }, 2000);
-              } catch (err) {
-                openModal({ title: 'คัดลอกไม่สำเร็จ', message: 'อุปกรณ์ของคุณไม่อนุญาต โปรดคัดลอกเอง', tone: 'danger' });
-              }
-            });
-        }
-        
-        if(nameEl) nameEl.addEventListener('blur', validateName);
-
-        // ✅ กรองให้เป็นตัวเลขเท่านั้น + จำกัดความยาว
-        if (phoneEl) {
-          phoneEl.addEventListener('input', () => {
-            phoneEl.value = phoneEl.value.replace(/[^\d]/g, '').slice(0, 15);
-          });
-          phoneEl.addEventListener('blur', validatePhone);
-        }
-
-        if (donateForm) {
-            donateForm.addEventListener('submit', async (e) => {
-              e.preventDefault();
-              if (!validateForm()) return;
-              showLoading(true);
-              await new Promise(r => setTimeout(r, 1200 + Math.random() * 500));
-              
-              const item = {
-                id: id(),
-                name: nameEl.value.trim(),
-                phone: phoneEl.value.trim(),
-                slip: slipDataURL,
-                createdAt: new Date().toISOString()
-              };
-              donations.unshift(item);
-              writeLS();
-              showLoading(false);
-
-              donateForm.reset();
-              if (clearSlipBtn) clearSlipBtn.click();
-              [errName, errPhone, errSlip].forEach(el => { if(el) el.classList.add('hidden'); });
-
-              await openModal({
-                title: 'สำเร็จ!',
-                message: 'ขอบคุณที่เลี้ยงกาแฟ รายการถูกบันทึกในแดชบอร์ดแล้ว',
-                tone: 'success',
-                primaryText: 'ดูแดชบอร์ด'
-              });
-              if(listWrap) listWrap.dataset.isNew = true;
-              setActiveTab('dashboard');
-            });
-        }
-
-        if (listWrap) {
-          listWrap.addEventListener('click', async (e) => {
-            const btn = e.target.closest('button[data-action]');
-            if (!btn) return;
-            const id = btn.getAttribute('data-id');
-            const action = btn.getAttribute('data-action');
-            const idx = donations.findIndex(d => d.id === id);
-            if (idx === -1) return;
-
-            if (action === 'view') {
-              openModal({ title: 'ดูสลิป', message: 'ตัวอย่างสลิปธนาคาร', tone: 'info', image: donations[idx].slip });
-            } else if (action === 'delete') {
-              const confirm = await openModal({ title: 'ยืนยันการลบ', message: 'คุณต้องการลบรายการนี้หรือไม่?', tone: 'danger', primaryText: 'ลบ', secondaryText: 'ยกเลิก' });
-              if (confirm) {
-                donations.splice(idx, 1);
-                writeLS();
-                renderDashboard();
-                openModal({ title: 'ลบแล้ว', message: 'รายการถูกลบออกจากแดชบอร์ด', tone: 'success' });
-              }
-            }
-          });
-        }
-
-        $$('#seedSamples')?.addEventListener('click', async () => {
-          const samples = [{ name: 'นัท', phone: '0891112222' }, { name: 'ฝน', phone: '0815556666' }, { name: 'เจ',  phone: '0827778888' }];
-          const tinyImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAukB9y5e2/8AAAAASUVORK5CYII=';
-          samples.forEach(s => { donations.unshift({ id: id(), name: s.name, phone: s.phone, slip: tinyImg, createdAt: new Date(Date.now() - Math.random() * 86400000).toISOString() }); });
-          donations.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+          donations.unshift(item);
           writeLS();
-          if(listWrap) listWrap.dataset.isNew = true;
-          renderDashboard();
-          openModal({ title: 'เพิ่มตัวอย่างแล้ว', message: 'เราใส่รายการตัวอย่างลงในแดชบอร์ดให้ทดสอบแล้ว', tone: 'success' });
+          showLoading(false);
+          donateForm.reset();
+          clearSlipBtn?.click();
+          [errName,errPhone,errSlip].forEach(el=>{ el && el.classList.add('hidden'); });
+          await openModal({ title:'สำเร็จ!', message:'ขอบคุณที่เลี้ยงกาแฟ รายการถูกบันทึกในแดชบอร์ดแล้ว', tone:'success', primaryText:'ดูแดชบอร์ด' });
+          if (listWrap) listWrap.dataset.isNew = true;
+          setActiveTab('dashboard');
         });
-
-        if (tabForm) tabForm.addEventListener('click', () => setActiveTab('form'));
-        if (tabDashboard) tabDashboard.addEventListener('click', () => setActiveTab('dashboard'));
       }
-      
-      // ---------- Init ----------
-      function init() {
-        donations = readLS();
-        if(ppDisplay) ppDisplay.textContent = PROMPTPAY_ID;
-        setupDropzone();
-        setupEventHandlers();
-        setActiveTab('form');
-      }
-      
-      init();
 
-    });
+      if (listWrap) {
+        listWrap.addEventListener('click', async (e)=>{
+          const btn = e.target.closest('button[data-action]');
+          if (!btn) return;
+          const id = btn.getAttribute('data-id');
+          const action = btn.getAttribute('data-action');
+          const idx = donations.findIndex(d=>d.id===id);
+          if (idx === -1) return;
+          if (action === 'view') {
+            openModal({ title:'ดูสลิป', message:'ตัวอย่างสลิปธนาคาร', tone:'info', image: donations[idx].slip });
+          } else if (action === 'delete') {
+            const confirm = await openModal({ title:'ยืนยันการลบ', message:'คุณต้องการลบรายการนี้หรือไม่?', tone:'danger', primaryText:'ลบ', secondaryText:'ยกเลิก' });
+            if (confirm) {
+              donations.splice(idx,1);
+              writeLS();
+              renderDashboard();
+              openModal({ title:'ลบแล้ว', message:'รายการถูกลบออกจากแดชบอร์ด', tone:'success' });
+            }
+          }
+        });
+      }
+
+      // ปุ่มเพิ่มตัวอย่าง (คงไว้เพื่อทดสอบเร็ว)
+      $$('#seedSamples')?.addEventListener('click', ()=>{
+        const samples = [{name:'นัท',phone:'0891112222'},{name:'ฝน',phone:'0815556666'},{name:'เจ',phone:'0827778888'}];
+        const tinyImg='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAukB9y5e2/8AAAAASUVORK5CYII=';
+        samples.forEach(s=>donations.unshift({id:id(),name:s.name,phone:s.phone,slip:tinyImg,createdAt:new Date(Date.now()-Math.random()*86400000).toISOString()}));
+        donations.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+        writeLS();
+        if (listWrap) listWrap.dataset.isNew = true;
+        renderDashboard();
+        openModal({ title:'เพิ่มตัวอย่างแล้ว', message:'เราใส่รายการตัวอย่างลงในแดชบอร์ดให้ทดสอบแล้ว', tone:'success' });
+      });
+
+      tabForm && tabForm.addEventListener('click', ()=>setActiveTab('form'));
+      tabDashboard && tabDashboard.addEventListener('click', ()=>setActiveTab('dashboard'));
+    }
+
+    // ---------- Init ----------
+    function init(){
+      donations = readLS();
+      if (ppDisplay) ppDisplay.value = PROMPTPAY_ID;
+      setupDropzone();
+      setupEventHandlers();
+      setActiveTab('form');
+    }
+    init();
+  });
   </script>
 </body>
 </html>
